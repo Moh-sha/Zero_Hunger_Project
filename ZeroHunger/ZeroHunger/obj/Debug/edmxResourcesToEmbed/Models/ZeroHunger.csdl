@@ -1,0 +1,109 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="ZeroHungerModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="Dashboard">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Amount" Type="Int32" Nullable="false" />
+    <Property Name="Status" Type="String" MaxLength="10" FixedLength="true" Unicode="true" Nullable="false" />
+    <Property Name="E_id" Type="String" MaxLength="10" FixedLength="true" Unicode="true" Nullable="false" />
+    <NavigationProperty Name="Employee" Relationship="Self.FK_Dashboards_Employees" FromRole="Dashboards" ToRole="Employees" />
+    <NavigationProperty Name="Orderdetails" Relationship="Self.FK_Orderdetails_Dashboards" FromRole="Dashboards" ToRole="Orderdetails" />
+  </EntityType>
+  <EntityType Name="Employee">
+    <Key>
+      <PropertyRef Name="E_Code" />
+    </Key>
+    <Property Name="E_Code" Type="String" MaxLength="10" FixedLength="true" Unicode="true" Nullable="false" />
+    <Property Name="E_name" Type="String" MaxLength="10" FixedLength="true" Unicode="true" Nullable="false" />
+    <NavigationProperty Name="Dashboards" Relationship="Self.FK_Dashboards_Employees" FromRole="Employees" ToRole="Dashboards" />
+  </EntityType>
+  <EntityType Name="Foodtable">
+    <Key>
+      <PropertyRef Name="Food_id" />
+    </Key>
+    <Property Name="Food_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Food_name" Type="String" MaxLength="10" FixedLength="true" Unicode="true" Nullable="false" />
+    <Property Name="Food_price" Type="Int32" Nullable="false" />
+    <Property Name="Food_Qty" Type="Int32" Nullable="false" />
+    <NavigationProperty Name="Orderdetails" Relationship="Self.FK_Orderdetails_Foodtables" FromRole="Foodtables" ToRole="Orderdetails" />
+  </EntityType>
+  <EntityType Name="Orderdetail">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Foodid" Type="Int32" Nullable="false" />
+    <Property Name="OrderId" Type="Int32" Nullable="false" />
+    <Property Name="Unitprice" Type="Int32" Nullable="false" />
+    <Property Name="Qty" Type="Int32" Nullable="false" />
+    <NavigationProperty Name="Dashboard" Relationship="Self.FK_Orderdetails_Dashboards" FromRole="Orderdetails" ToRole="Dashboards" />
+    <NavigationProperty Name="Foodtable" Relationship="Self.FK_Orderdetails_Foodtables" FromRole="Orderdetails" ToRole="Foodtables" />
+  </EntityType>
+  <EntityType Name="sysdiagram">
+    <Key>
+      <PropertyRef Name="diagram_id" />
+    </Key>
+    <Property Name="name" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="principal_id" Type="Int32" Nullable="false" />
+    <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="version" Type="Int32" />
+    <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
+  </EntityType>
+  <Association Name="FK_Dashboards_Employees">
+    <End Role="Employees" Type="Self.Employee" Multiplicity="1" />
+    <End Role="Dashboards" Type="Self.Dashboard" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Employees">
+        <PropertyRef Name="E_Code" />
+      </Principal>
+      <Dependent Role="Dashboards">
+        <PropertyRef Name="E_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Orderdetails_Dashboards">
+    <End Role="Dashboards" Type="Self.Dashboard" Multiplicity="1" />
+    <End Role="Orderdetails" Type="Self.Orderdetail" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Dashboards">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="Orderdetails">
+        <PropertyRef Name="OrderId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Orderdetails_Foodtables">
+    <End Role="Foodtables" Type="Self.Foodtable" Multiplicity="1" />
+    <End Role="Orderdetails" Type="Self.Orderdetail" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Foodtables">
+        <PropertyRef Name="Food_id" />
+      </Principal>
+      <Dependent Role="Orderdetails">
+        <PropertyRef Name="Foodid" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="ZeroHungerEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="Dashboards" EntityType="Self.Dashboard" />
+    <EntitySet Name="Employees" EntityType="Self.Employee" />
+    <EntitySet Name="Foodtables" EntityType="Self.Foodtable" />
+    <EntitySet Name="Orderdetails" EntityType="Self.Orderdetail" />
+    <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagram" />
+    <AssociationSet Name="FK_Dashboards_Employees" Association="Self.FK_Dashboards_Employees">
+      <End Role="Employees" EntitySet="Employees" />
+      <End Role="Dashboards" EntitySet="Dashboards" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Orderdetails_Dashboards" Association="Self.FK_Orderdetails_Dashboards">
+      <End Role="Dashboards" EntitySet="Dashboards" />
+      <End Role="Orderdetails" EntitySet="Orderdetails" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Orderdetails_Foodtables" Association="Self.FK_Orderdetails_Foodtables">
+      <End Role="Foodtables" EntitySet="Foodtables" />
+      <End Role="Orderdetails" EntitySet="Orderdetails" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>

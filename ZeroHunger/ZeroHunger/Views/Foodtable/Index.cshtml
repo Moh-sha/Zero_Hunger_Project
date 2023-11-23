@@ -1,0 +1,54 @@
+﻿@model IEnumerable<ZeroHunger.Models.Foodtable>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<h1>Resturent DashBoard</h1>
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Food_id)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Food_name)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Food_price)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Food_Qty)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Food_id)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Food_name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Food_price)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Food_Qty)
+            </td>
+            <td>
+
+                <a href="/Foodtable/CollectRequest/@item.Food_id"> Collect Request </a>
+            </td>
+        </tr>
+    }
+
+</table>
+
